@@ -1,5 +1,6 @@
 export default {
   Query: {
-    hello: () => "Hello world!",
+    movie: (source: any, args: any, context: any) =>
+      context.dataSources.tmdb.getMovieById(args.id),
   },
 };

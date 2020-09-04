@@ -1,10 +1,20 @@
-import { ApolloServer, gql } from "apollo-server-express";
-import typeDefs from './schema'
-import resolvers from './resolvers'
+import {
+  ApolloServer,
+  ApolloServerExpressConfig,
+  gql,
+} from "apollo-server-express";
+import typeDefs from "./typeDefs";
+import resolvers from "./resolvers";
+import dataSources from "./dataSources";
 
-const server = new ApolloServer({
+export interface Context {}
+
+export const config: ApolloServerExpressConfig = {
   typeDefs,
   resolvers,
-});
+  dataSources,
+};
+
+export const server = new ApolloServer(config);
 
 export default server;
