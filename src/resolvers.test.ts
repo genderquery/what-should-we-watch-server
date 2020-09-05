@@ -3,7 +3,7 @@ import resolvers from "./resolvers";
 const context = {
   dataSources: {
     tmdb: {
-      getMovieById: (id: number) => ({
+      getMovieById: () => ({
         id: "603",
         title: "The Matrix",
         releaseDate: "1999-03-30",

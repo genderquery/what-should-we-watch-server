@@ -1,5 +1,12 @@
 import { RequestOptions, RESTDataSource } from "apollo-datasource-rest";
 
+export interface Movie {
+  id: number;
+  title: string;
+  releaseDate: string;
+  overview: string;
+}
+
 export class TmdbDataSource extends RESTDataSource {
   private apiToken: string;
 
@@ -9,11 +16,11 @@ export class TmdbDataSource extends RESTDataSource {
     this.baseURL = "https://api.themoviedb.org/";
   }
 
-  willSendRequest(request: RequestOptions) {
+  willSendRequest(request: RequestOptions): void {
     request.headers.set("Authorization", `Bearer ${this.apiToken}`);
   }
 
-  static movieReducer(source: any) {
+  static movieReducer(source: any): Movie {
     return {
       id: source.id,
       title: source.title,
@@ -22,7 +29,7 @@ export class TmdbDataSource extends RESTDataSource {
     };
   }
 
-  async getMovieById(id: number) {
+  async getMovieById(id: number): Promise<Movie> {
     const result = await this.get(`3/movie/${id}`);
     return TmdbDataSource.movieReducer(result);
   }

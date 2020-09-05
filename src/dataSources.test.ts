@@ -84,12 +84,12 @@ const mockMovie = {
   vote_count: 17671,
 };
 
-const get = jest.fn<any, any>();
+const get = jest.fn();
 
 jest.mock("apollo-datasource-rest", () => ({
   __esModule: true,
   RESTDataSource: class {
-    get = get
+    get = get;
   },
 }));
 
@@ -97,7 +97,6 @@ test("movieReducer", () => {
   const result = TmdbDataSource.movieReducer(mockMovie);
   expect(result).toMatchSnapshot();
 });
-
 
 test("sends API token", async () => {
   const tmdb = new TmdbDataSource("mytoken");
@@ -111,12 +110,12 @@ test("sends API token", async () => {
 });
 
 test("getMovieById", async () => {
-  get.mockReset()
-  get.mockReturnValueOnce(mockMovie)
+  get.mockReset();
+  get.mockReturnValueOnce(mockMovie);
 
   const tmdb = new TmdbDataSource("mytoken");
   const result = await tmdb.getMovieById(506);
 
-  expect(get).toHaveBeenCalledWith('3/movie/506')
-  expect(result).toMatchSnapshot()
+  expect(get).toHaveBeenCalledWith("3/movie/506");
+  expect(result).toMatchSnapshot();
 });
