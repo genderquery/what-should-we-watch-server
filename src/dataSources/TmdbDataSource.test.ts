@@ -1,6 +1,42 @@
 import { RequestOptions } from "apollo-datasource-rest";
 import { Headers, URLSearchParams } from "apollo-server-env";
-import { TmdbDataSource } from "./dataSources";
+import { TmdbDataSource } from "./TmdbDataSource";
+
+const get = jest.fn();
+
+jest.mock("apollo-datasource-rest", () => ({
+  __esModule: true,
+  RESTDataSource: class {
+    get = get;
+  },
+}));
+
+test("movieReducer", () => {
+  const result = TmdbDataSource.movieReducer(mockMovie);
+  expect(result).toMatchSnapshot();
+});
+
+test("sends API token", async () => {
+  const tmdb = new TmdbDataSource("mytoken");
+  const request: RequestOptions = {
+    path: "/",
+    params: new URLSearchParams(),
+    headers: new Headers(),
+  };
+  tmdb.willSendRequest(request);
+  expect(request.headers.get("Authorization")).toBe("Bearer mytoken");
+});
+
+test("getMovieById", async () => {
+  get.mockReset();
+  get.mockReturnValueOnce(mockMovie);
+
+  const tmdb = new TmdbDataSource("mytoken");
+  const result = await tmdb.getMovieById("506");
+
+  expect(get).toHaveBeenCalledWith("3/movie/506");
+  expect(result).toMatchSnapshot();
+});
 
 const mockMovie = {
   adult: false,
@@ -83,39 +119,3 @@ const mockMovie = {
   vote_average: 8.1,
   vote_count: 17671,
 };
-
-const get = jest.fn();
-
-jest.mock("apollo-datasource-rest", () => ({
-  __esModule: true,
-  RESTDataSource: class {
-    get = get;
-  },
-}));
-
-test("movieReducer", () => {
-  const result = TmdbDataSource.movieReducer(mockMovie);
-  expect(result).toMatchSnapshot();
-});
-
-test("sends API token", async () => {
-  const tmdb = new TmdbDataSource("mytoken");
-  const request: RequestOptions = {
-    path: "/",
-    params: new URLSearchParams(),
-    headers: new Headers(),
-  };
-  tmdb.willSendRequest(request);
-  expect(request.headers.get("Authorization")).toBe("Bearer mytoken");
-});
-
-test("getMovieById", async () => {
-  get.mockReset();
-  get.mockReturnValueOnce(mockMovie);
-
-  const tmdb = new TmdbDataSource("mytoken");
-  const result = await tmdb.getMovieById(506);
-
-  expect(get).toHaveBeenCalledWith("3/movie/506");
-  expect(result).toMatchSnapshot();
-});

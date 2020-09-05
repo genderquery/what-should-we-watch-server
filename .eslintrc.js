@@ -16,6 +16,7 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["@typescript-eslint"],
+  ignorePatterns: ["src/generated/**/*"],
   rules: {
     "prefer-const": ["warn"]
   },

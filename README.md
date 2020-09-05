@@ -19,3 +19,7 @@ Launches the test runner in the interactive watch mode.
 ### `yarn build`
 
 Builds the server for production to the `build` folder.
+
+### `yarn generate`
+
+Generate TypeScript type information from GraphQL schema.

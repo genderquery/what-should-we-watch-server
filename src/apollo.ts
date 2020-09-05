@@ -1,14 +1,13 @@
-import {
-  ApolloServer,
-  ApolloServerExpressConfig,
-} from "apollo-server-express";
-import typeDefs from "./typeDefs";
-import resolvers from "./resolvers";
-import dataSources from "./dataSources";
+import { ApolloServer, ApolloServerExpressConfig } from "apollo-server-express";
+import schema from "./schema";
+import dataSources, { DataSources } from "./dataSources";
+
+export interface Context {
+  dataSources: DataSources<Context>;
+}
 
 export const config: ApolloServerExpressConfig = {
-  typeDefs,
-  resolvers,
+  schema,
   dataSources,
 };
 
